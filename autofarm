@@ -146,16 +146,6 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait() do
-        for i, v in ipairs(game.Workspace.Ignored.Drop:GetChildren()) do
-            if v.Name == "MoneyDrop" then
-                v.Anchored = true
-            end
-        end
-    end
-end)
-
-task.spawn(function()
 	for i,v in pairs(workspace:GetDescendants()) do 
 		if (v:IsA("Seat") or (v:IsA("VehicleSeat"))) then 
 			v:Destroy()
@@ -292,7 +282,6 @@ task.spawn(function()
 end)
 
 if localPlayer.Character then
-    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -100, 0)
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
     game:GetService("RunService"):Set3dRenderingEnabled(false)
