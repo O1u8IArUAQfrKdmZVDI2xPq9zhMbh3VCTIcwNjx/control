@@ -101,7 +101,7 @@ repeat
                         Client.Character:WaitForChild("HumanoidRootPart").Velocity = Vector3.new(0, 0, 0)
 
                         fireclickdetector(button.ClickDetector)
-                    until Client.Backpack:FindFirstChild("[Key]")
+                    until Client.Backpack:FindFirstChild("[Key]") or not Settings.Enabled
 
                     local key = Client.Backpack:WaitForChild("[Key]")
                     Client.Character.Humanoid:EquipTool(key)
@@ -136,9 +136,9 @@ repeat
 
                             Client.Character.HumanoidRootPart.CFrame = ATM.Open.CFrame * CFrame.new(0, -10, 0)
                             Client.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-                        until Client.Character:FindFirstChildOfClass("Highlight") or Client.Character.BodyEffects.Dead.Value
+                        until Client.Character:FindFirstChildOfClass("Highlight") or Client.Character.BodyEffects.Dead.Value or not Settings.Enabled
                     end
-                until ATM.Humanoid.Health <= 0 or Client.Character.BodyEffects.Dead.Value
+                until ATM.Humanoid.Health <= 0 or Client.Character.BodyEffects.Dead.Value or not Settings.Enabled
 
                 pcall(function()
                     for Index, Value in ipairs(game.Workspace.Ignored.Drop:GetChildren()) do
@@ -151,11 +151,11 @@ repeat
 
                                 Client.Character.HumanoidRootPart.CFrame = CFrame.new(Value.Position - Vector3.new(0, 8, 0))
                                 Client.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-                            until Value.Parent == nil
+                            until Value.Parent == nil or not Settings.Enabled
                         end
                     end
                 end)
-            elseif (ATM == 0) then
+            elseif (not ATM) then
                 Serverhop()
             end
             
