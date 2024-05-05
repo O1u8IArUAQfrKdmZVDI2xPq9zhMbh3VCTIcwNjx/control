@@ -82,10 +82,10 @@ task.spawn(function()
     end
 end)
 
-repeat
+repeat task.wait()
     local _, Error = pcall(function()
         if (CheckLoaded()) then
-            for Index, Value in ipairs(Client:GetPlayers()) do
+            for Index, Value in ipairs(Players:GetPlayers()) do
                 if (not Value.Name:sub(1,8) == 'Prestige') then continue end
 
                 Serverhop()
