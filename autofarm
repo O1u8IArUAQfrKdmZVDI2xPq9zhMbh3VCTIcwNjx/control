@@ -85,11 +85,11 @@ end)
 repeat task.wait()
     local _, Error = pcall(function()
         if (CheckLoaded()) then
-            for Index, Value in ipairs(Players:GetPlayers()) do
+            --[[for Index, Value in ipairs(Players:GetPlayers()) do
                 if (not Value.Name:sub(1,8) == 'Prestige') then continue end
 
                 Serverhop()
-            end
+            end]]
             if (Settings.AutoUnjail and Client.Character.BodyEffects.Cuff.Value == true) then
                 pcall(function()
 
