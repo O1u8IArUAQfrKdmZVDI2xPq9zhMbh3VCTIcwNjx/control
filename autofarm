@@ -1,460 +1,299 @@
 repeat task.wait(0.1) until (game:GetService("Players").LocalPlayer) and (game:GetService("Players").LocalPlayer.Character) and (game.Players.LocalPlayer:WaitForChild("DataFolder"))
 
-    loadstring(game:HttpGetAsync("https://icebear.lol/Utilities/AntiAfk.txt"))()
+loadstring(game:HttpGetAsync("https://icebear.lol/Utilities/AntiAfk.txt"))()
 
-    getgenv().toggle = true
+getgenv().toggle = true
 
-    configurations = {
-        autoMask = false,
-        autoUnjail = true,
-        registerTimeout = 1,
-        webhook = { -- doesnt work yet shush
-            toggle = false,
-            link = ""
-        }
+configurations = {
+    autoMask = true,
+    autoUnjail = true,
+    registerTimeout = 1,
+    webhook = { -- doesnt work yet shush
+        toggle = false,
+        link = ""
     }
+}
 
-    local localPlayer = game.Players.LocalPlayer
-    local registerBlacklist = {}
-    local registerIgnore = {}
+local localPlayer = game.Players.LocalPlayer
+local registerBlacklist = {}
+local registerIgnore = {}
 
-    local names = {
-        "TeleportDetect",
-        "OneMoreTime",
-        "CHECKER_1",
-        "Kick",
-        "BreathingHAMON",
-        "BR_KICKPC",
-        "KICKREMOTE",
-        "CHECKER",
-        "PERMAIDBAN",
-        "checkingSPEED",
-        "GUI_CHECK",
-        "BANREMOTE",
-    }
+local names = {
+    "TeleportDetect",
+    "OneMoreTime",
+    "CHECKER_1",
+    "Kick",
+    "BreathingHAMON",
+    "BR_KICKPC",
+    "KICKREMOTE",
+    "CHECKER",
+    "PERMAIDBAN",
+    "checkingSPEED",
+    "GUI_CHECK",
+    "BANREMOTE",
+}
 
-    local old
-    old = hookmetamethod(game, "__namecall", function(...)
-        local args = {...}
-        local namecallmethod = getnamecallmethod()
-        if namecallmethod == "FireServer" and args[1] == game.ReplicatedStorage.MainEvent then
-            if table.find(names, args[2]) then
-                return ''
-            end
+local old
+old = hookmetamethod(game, "__namecall", function(...)
+    local args = {...}
+    local namecallmethod = getnamecallmethod()
+    if namecallmethod == "FireServer" and args[1] == game.ReplicatedStorage.MainEvent then
+        if table.find(names, args[2]) then
+            return ''
         end
-        return old(...)
-    end)
+    end
+    return old(...)
+end)
 
+for _, register in ipairs(workspace.Cashiers:GetChildren()) do
+    for _, secondRegister in ipairs(workspace.Cashiers:GetChildren()) do
+        if register ~= secondRegister and (register.Open.Position - secondRegister.Open.Position).Magnitude <= 5 then
+            table.insert(registerBlacklist, register)
+            table.insert(registerBlacklist, secondRegister)
+            print("Blacklisted Register(s)")
+        end
+    end
+end
+
+local function jailCheck()
+    if localPlayer.DataFolder:FindFirstChild("Information"):FindFirstChild("Jail") and localPlayer.DataFolder:FindFirstChild("Information"):FindFirstChild("Jail").Value ~= "0" then
+        return true
+    else
+        return false
+    end
+end
+
+local function getRegisterCount()
+    local count = 0
     for _, register in ipairs(workspace.Cashiers:GetChildren()) do
-        for _, secondRegister in ipairs(workspace.Cashiers:GetChildren()) do
-            if register ~= secondRegister and (register.Open.Position - secondRegister.Open.Position).Magnitude <= 5 then
-                table.insert(registerBlacklist, register)
-                table.insert(registerBlacklist, secondRegister)
-                print("Blacklisted Register(s)")
-            end
+        if register.Humanoid.Health > 0 then
+            count += 1
+        end
+    end 
+
+    return count
+end
+
+local function maskCheck()
+    if localPlayer.Character.BodyEffects.Mask.Value == "" then
+        return false
+    else
+        return true
+    end
+end
+
+local function getRegister()
+    for _, register in ipairs(workspace.Cashiers:GetChildren()) do
+        if register.Humanoid.Health > 0 and not table.find(registerIgnore, register) and not table.find(registerBlacklist, register) then
+            return register
         end
     end
+end
 
-    local function jailCheck()
-        if localPlayer.DataFolder:FindFirstChild("Information"):FindFirstChild("Jail") and localPlayer.DataFolder:FindFirstChild("Information"):FindFirstChild("Jail").Value ~= "0" then
-            return true
+local function punchRegister(register)
+    repeat
+        if localPlayer.Backpack:FindFirstChild("Combat") then
+            localPlayer.Character.Humanoid:EquipTool(localPlayer.Backpack.Combat)
         else
-            return false
+            localPlayer.Character.Combat:Activate()
+        end
+        localPlayer.Character.PrimaryPart.CFrame = register.Open.CFrame * CFrame.new(0, -10, 0)
+        
+        task.wait()
+    until localPlayer.Character:FindFirstChildOfClass("Highlight") or not getgenv().toggle
+
+    local timeOut = tick()
+    local registerHealth = register.Humanoid.Health
+    repeat
+        localPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+        localPlayer.Character.PrimaryPart.CFrame = register.Open.CFrame * CFrame.new(0, -2, 0)
+
+        if (tick() - timeOut) >= configurations.registerTimeout then
+            table.insert(registerIgnore, register)
+            break
+        end
+        
+        task.wait()
+    until registerHealth ~= register.Humanoid.Health or not getgenv().toggle
+end
+
+local function checkCash(register)
+    for _, cash in ipairs(workspace.Ignored.Drop:GetChildren()) do
+        if cash.Name == "MoneyDrop" and ((register.Open.CFrame * CFrame.new(0, -7, -5)).Position - cash.Position).Magnitude <= 18 then
+            return true, cash
         end
     end
+end
 
-    local function getRegisterCount()
-        local count = 0
-        for _, register in ipairs(workspace.Cashiers:GetChildren()) do
-            if register.Humanoid.Health > 0 then
-                count += 1
-            end
-        end 
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.CoreGui
 
-        return count
+local textLabel = Instance.new("TextLabel")
+textLabel.Parent = screenGui
+textLabel.BackgroundTransparency = 1
+textLabel.Text = "Waiting For Check"
+textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+textLabel.Position = UDim2.new(0.5, 0, 0.2, 0)
+textLabel.Size = UDim2.new(1, 0, 0.5, 0)
+textLabel.TextSize = 18
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextStrokeTransparency = 0
+textLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+task.spawn(function()
+    while task.wait(0.5) do
+        textLabel.Text = "ATMS Available: "..tostring(getRegisterCount())
     end
+end)
 
-    local function maskCheck()
-        if localPlayer.Character:WaitForChild("BodyEffects").Mask.Value == "" then
-            return false
-        else
-            return true
-        end
-    end
-
-    local function getRegister()
-        for _, register in ipairs(workspace.Cashiers:GetChildren()) do
-            if register.Humanoid.Health > 0 and not table.find(registerIgnore, register) and not table.find(registerBlacklist, register) then
-                return register
-            end
-        end
-    end
-
-    local function punchRegister(register)
-        repeat
-            if localPlayer.Backpack:FindFirstChild("Combat") then
-                localPlayer.Character.Humanoid:EquipTool(localPlayer.Backpack.Combat)
-            else
-                localPlayer.Character.Combat:Activate()
-            end
-            localPlayer.Character.PrimaryPart.CFrame = register.Open.CFrame * CFrame.new(0, -10, 0)
-            
-            task.wait()
-        until localPlayer.Character:FindFirstChildOfClass("Highlight") or not getgenv().toggle
-
-        local timeOut = tick()
-        local registerHealth = register.Humanoid.Health
-        repeat
-            localPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-            localPlayer.Character.PrimaryPart.CFrame = register.Open.CFrame * CFrame.new(0, -2, 0)
-
-            if (tick() - timeOut) >= configurations.registerTimeout then
-                table.insert(registerIgnore, register)
-                break
-            end
-            
-            task.wait()
-        until registerHealth ~= register.Humanoid.Health or not getgenv().toggle
-    end
-
-    local function checkCash(register)
-        for _, cash in ipairs(workspace.Ignored.Drop:GetChildren()) do
-            if cash.Name == "MoneyDrop" and ((register.Open.CFrame * CFrame.new(0, -7, -5)).Position - cash.Position).Magnitude <= 18 then
-                return true, cash
+task.spawn(function()
+    while task.wait() do
+        for i, v in ipairs(game.Workspace.Ignored.Drop:GetChildren()) do
+            if v.Name == "MoneyDrop" then
+                v.Anchored = true
             end
         end
     end
+end)
 
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Parent = game.CoreGui
+task.spawn(function()
+	for i,v in pairs(workspace:GetDescendants()) do 
+		if (v:IsA("Seat") or (v:IsA("VehicleSeat"))) then 
+			v:Destroy()
+		end
+	end
+end)
 
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Parent = screenGui
-    textLabel.BackgroundTransparency = 1
-    textLabel.Text = "Waiting For Check"
-    textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-    textLabel.Position = UDim2.new(0.5, 0, 0.2, 0)
-    textLabel.Size = UDim2.new(1, 0, 0.5, 0)
-    textLabel.TextSize = 18
-    textLabel.Font = Enum.Font.GothamBold
-    textLabel.TextStrokeTransparency = 0
-    textLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-    task.spawn(function()
-        while task.wait(0.5) do
-            textLabel.Text = "ATMS Available: "..tostring(getRegisterCount())
-        end
-    end)
-    task.spawn(function()
-        for i,v in pairs(workspace:GetDescendants()) do 
-            if (v:IsA("Seat") or (v:IsA("VehicleSeat"))) then 
-                v:Destroy()
-            end
-        end
-    end)
+local AntiSit = function(Char)
+	task.wait(1)	
+	local Hum = Char:WaitForChild("Humanoid")
+	Hum.Seated:Connect(function()
+		warn("SITTING")
+		Hum.Sit = false
+		Hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+		task.wait(0.3)
+		Hum.Jump = true
+		--// theres prob a better method to do this but im lazy lol
+	end)
+end
 
-    local AntiSit = function(Char)
-        task.wait(1)	
-        local Hum = Char:WaitForChild("Humanoid")
-        Hum.Seated:Connect(function()
-            warn("SITTING")
-            Hum.Sit = false
-            Hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-            task.wait(0.3)
-            Hum.Jump = true
-            --// theres prob a better method to do this but im lazy lol
-        end)
-    end
+localPlayer.CharacterAdded:Connect(function(character)
+    local loadCheck = character:WaitForChild("FULLY_LOADED_CHAR")
 
-    localPlayer.CharacterAdded:Connect(function(character)
-        local loadCheck = character:WaitForChild("FULLY_LOADED_CHAR")
-
-        while getgenv().toggle and task.wait() do
-            
-            if configurations.autoUnjail then
-                if jailCheck() then
-                    local keyButton
-                    for _, button in ipairs(workspace.Ignored.Shop:GetChildren()) do
-                        local split = string.split(button.Name, " ")
-                        if split[1] == "[Key]" then
-                            keyButton = button
-                        end
-                    end
-                
-                    if keyButton then
-                        repeat
-                            localPlayer.Character.HumanoidRootPart.CFrame = keyButton.Head.CFrame
-                            localPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-                            fireclickdetector(keyButton.ClickDetector)
-                            task.wait()
-                        until localPlayer.Backpack:FindFirstChild("[Key]")
-                
-                        repeat
-                            localPlayer.Character.Humanoid:EquipTool(localPlayer.Backpack["[Key]"])
-                            task.wait()
-                        until localPlayer.Character:FindFirstChild("[Key]")
-                    else
-                        print("Autofarm: Failed to find key button", 1)
+    while getgenv().toggle and task.wait() do
+        
+        if configurations.autoUnjail then
+            if jailCheck() then
+                local keyButton
+                for _, button in ipairs(workspace.Ignored.Shop:GetChildren()) do
+                    local split = string.split(button.Name, " ")
+                    if split[1] == "[Key]" then
+                        keyButton = button
                     end
                 end
+            
+                if keyButton then
+                    repeat
+                        localPlayer.Character.HumanoidRootPart.CFrame = keyButton.Head.CFrame
+                        localPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                        fireclickdetector(keyButton.ClickDetector)
+                        task.wait()
+                    until localPlayer.Backpack:FindFirstChild("[Key]")
+            
+                    repeat
+                        localPlayer.Character.Humanoid:EquipTool(localPlayer.Backpack["[Key]"])
+                        task.wait()
+                    until localPlayer.Character:FindFirstChild("[Key]")
+                else
+                    print("Autofarm: Failed to find key button", 1)
+                end
             end
+        end
 
-            if configurations.autoMask then
-                if not maskCheck() then
-                    local maskButton
-                    for _, button in ipairs(workspace.Ignored.Shop:GetChildren()) do
-                        local nameSplit = string.split(button.Name, " ")
-                        if nameSplit[1] == "[Breathing" then
-                            maskButton = button
+        if configurations.autoMask then
+            if not maskCheck() then
+                local maskButton
+                for _, button in ipairs(workspace.Ignored.Shop:GetChildren()) do
+                    local split = string.split(button.Name, " ")
+                    if split[1] == "[Breathing" then
+                        maskButton = button
+                    end
+                end
+
+                if maskButton then
+                    repeat
+                        localPlayer.Character.HumanoidRootPart.CFrame = maskButton.Head.CFrame
+                        localPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                        fireclickdetector(maskButton.ClickDetector)
+                        task.wait()
+                    until localPlayer.Backpack:FindFirstChild("[Mask]")
+
+                    repeat
+                        localPlayer.Character.Humanoid:EquipTool(localPlayer.Backpack["[Mask]"])
+                        task.wait()
+                    until localPlayer.Character:FindFirstChild("[Mask]")
+
+                    localPlayer.Character["[Mask]"]:Activate()
+                else
+                    print("Autofarm: Failed to find mask button", 1)
+                end
+            end
+        end
+
+        local register = getRegister()
+        if register then
+            pcall(function()
+                repeat
+                    punchRegister(register)
+                    task.wait()
+                until register.Humanoid.Health <= 0 or localPlayer.Character.BodyEffects["K.O"].Value == true or not getgenv().toggle
+
+                local check = tick()
+                repeat 
+                    localPlayer.Character.PrimaryPart.CFrame = register.Open.CFrame * CFrame.new(0, -10, 0)
+                    task.wait() 
+                until checkCash(register) or (tick() - check) >= 1.5 or not getgenv().toggle
+
+                if register.Humanoid.Health <= 0 then
+                    while task.wait() do
+                        localPlayer.Character.HumanoidRootPart.CFrame = register.Open.CFrame * CFrame.new(0, -7, -5)
+
+                        if checkCash(register) then
+                            local pickupTimer = tick()
+                            repeat
+                                localPlayer.Character.HumanoidRootPart.CFrame = register.Open.CFrame * CFrame.new(0, -7, -5)
+                                if (tick() - pickupTimer) >= 0.86 then
+                                    local check, money = checkCash(register)
+                                    fireclickdetector(money.ClickDetector)
+                                end
+                                
+                                task.wait()
+                            until not checkCash(register) or not getgenv().toggle
+                        else
                             break
                         end
                     end
-                
-                    if maskButton then
-                        local purchaseDelay = tick()
-                        repeat
-                            task.wait()
-                
-                            character.HumanoidRootPart.CFrame = maskButton.Head.CFrame * CFrame.new(0, -11, 0)
-                            if (tick() - purchaseDelay) >= 0.86 then
-                                fireclickdetector(maskButton.ClickDetector)
-                            end
-                        until localPlayer.Backpack:FindFirstChild("[Mask]") or character:FindFirstChild("[Mask]")
-                
-                        repeat
-                            task.wait()
-                
-                            character.Humanoid:EquipTool(localPlayer.Backpack:FindFirstChild("[Mask]"))
-                        until character:FindFirstChild("[Mask]")
-                
-                        character:FindFirstChild("[Mask]"):Activate()
-                    else
-                        warn("Failed to find mask button!")
-                    end
+                else
+                    print("Autofarm: Timed out prob", 1)
                 end
-            end
-
-            local register = getRegister()
-            if register then
-                pcall(function()
-                    repeat
-                        punchRegister(register)
-                        task.wait()
-                    until register.Humanoid.Health <= 0 or localPlayer.Character.BodyEffects["K.O"].Value == true or not getgenv().toggle
-
-                    local check = tick()
-                    repeat 
-                        localPlayer.Character.PrimaryPart.CFrame = register.Open.CFrame * CFrame.new(0, -10, 0)
-                        task.wait() 
-                    until checkCash(register) or (tick() - check) >= 1.5 or not getgenv().toggle
-
-                    if register.Humanoid.Health <= 0 then
-                        while task.wait() do
-                            localPlayer.Character.HumanoidRootPart.CFrame = register.Open.CFrame * CFrame.new(0, -7, -5)
-
-                            if checkCash(register) then
-                                local pickupTimer = tick()
-                                repeat
-                                    localPlayer.Character.HumanoidRootPart.CFrame = register.Open.CFrame * CFrame.new(0, -7, -5)
-                                    if (tick() - pickupTimer) >= 0.86 then
-                                        local check, money = checkCash(register)
-                                        fireclickdetector(money.ClickDetector)
-                                    end
-                                    
-                                    task.wait()
-                                until not checkCash(register) or not getgenv().toggle
-                            else
-                                break
-                            end
-                        end
-                    else
-                        print("Autofarm: Timed out prob", 1)
-                    end
-                end)
-            else
-                localPlayer.Character.PrimaryPart.CFrame = CFrame.new(math.random(-500, 500), 1500, math.random(-500, 500))
-                localPlayer.Character.PrimaryPart.Velocity = Vector3.new(0, 0, 0)
-
-                registerIgnore = {}
-            end
-        end
-    end)
-    -- Low GFX -- // USEFULL FOR WITHOUT 3D Disabling \\
-    if not game:IsLoaded() then
-
-        game.Loaded:Wait()
-        
-        end
-        local decalsyeeted = true -- Leaving this on makes games look shitty but the fps goes up by at least 20.
-        local g = game
-        local w = g.Workspace
-        local l = g.Lighting
-        local t = w.Terrain
-        t.WaterWaveSize = 0
-        t.WaterWaveSpeed = 0
-        t.WaterReflectance = 0
-        t.WaterTransparency = 0
-        l.GlobalShadows = false
-        l.FogEnd = 9e9
-        l.Brightness = 0
-        settings().Rendering.QualityLevel = "Level01"
-        for i,v in pairs(g:GetDescendants()) do
-            if v:IsA("Part") or v:IsA("Union") or v:IsA("MeshPart") then
-                v.Material = "Plastic"
-        v.Reflectance = 0
-        elseif v:IsA("Decal") and decalsyeeted then 
-        v.Transparency = 1
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then 
-        v.Lifetime = NumberRange.new(0)
-            end
-        end
-            getgenv().config = {
-                placeId = 2788229376,
-                servers = {
-                    sort = "Asc",
-                    count = 10,
-                    pageDeep = 1,
-                },
-                blacklistedIds = {
-                    3764559979, -- ztdoor
-                    502075313,
-                    3717987181,
-                    3718016081,
-                    3718028682,
-                    3718031255,
-                    3718032709,
-                    3718035897,
-                    3718037805,
-                    3718039351,
-                    3718045446,
-                    3717988286,
-                    3718046979,
-                    3718049045,
-                    3718053295,
-                    3718058329,
-                    3719091389,
-                    3719094992,
-                    3717994572,
-                    3718005704,
-                    3718011165,
-                    3719090226,
-                    3719088792,
-                    3719087676,
-                    3717990516,
-                    3719086577,
-                    3719085764,
-                    3719082271,
-                    3719084596,
-                    3718061120,
-                    3718059646,
-                    3718013439,
-                    3718019947,
-                    3719100443,
-                    3718041567,
-                    3718003835, -- c1lonedropper
-                },
-            }
-            local plrs = game:GetService("Players")
-            local plr = plrs.LocalPlayer
-            
-            local HttpService = game:GetService("HttpService")
-            local TeleportService = game:GetService("TeleportService")
-            
-            function serverhop() 
-                local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true" 
-                local req = request({ Url = string.format(sfUrl, config.placeId, config.servers.sort, config.servers.count) }) 
-                local body = HttpService:JSONDecode(req.Body) 
-                for i = 1, config.servers.pageDeep, 1 do 
-                    req = request({ Url = string.format( sfUrl .. "&cursor=" .. body.nextPageCursor, config.placeId, config.servers.sort, config.servers.count ), }) 
-                    body = HttpService:JSONDecode(req.Body) 
-                end
-                local servers = {} 
-                if body and body.data then 
-                    for i, v in next, body.data do
-                        if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then 
-                            table.insert(servers, 1, v.id) 
-                        end 
-                    end 
-                end
-                print("printing server found count")
-                print(#servers)
-                if #servers > 0 then
-                    TeleportService:TeleportToPlaceInstance(config.placeId, servers[math.random(1, #servers)], plr) 
-                end      
-            end
-            
-            for i,v in plrs:GetPlayers() do
-                if table.find(config.blacklistedIds,v.UserId) and plr.UserId ~= v.UserId then
-                    serverhop()
-                end
-            end
-    if localPlayer.Character then
-        localPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(0, -100, 0)
-    local ok = "[+]"
-    local info = "[*]"
-    local err = "[-]"
-    local plrs = game:GetService("Players")
-    local plr = plrs.LocalPlayer
-    local dropFolder = Workspace.Ignored:WaitForChild("Drop")
-    local mainEvent = game:GetService("ReplicatedStorage"):WaitForChild("MainEvent")
-    local ReplicatedStorage = game:GetService("ReplicatedStorage")
-    local coolStuffz = {}
-
-    for _,v in game:GetService("Workspace").Ignored.Shop:GetChildren() do
-        if string.find(v.Name,"Key") then
-            coolStuffz.key = v
-        elseif string.find(v.Name,"Surgeon Mask") then
-            coolStuffz.mask = v
-        end
-    end
-
-    function getMask()
-        if plr.Character:FindFirstChild("[Mask]") or plr.Backpack:FindFirstChild("[Mask]") then
-            return
-        end
-        local savedCFrame = plr.Character:WaitForChild("HumanoidRootPart").CFrame
-        local maskModel = coolStuffz.mask
-        task.wait()
-        task.spawn(function()
-            repeat task.wait()
-                plr.Character:WaitForChild("HumanoidRootPart").CFrame = maskModel.Head.CFrame
-            until plr.Backpack:FindFirstChild("[Mask]") or plr.Character:FindFirstChild("[Mask]")
-        end)
-        repeat task.wait()
-            pcall(function()
-                fireclickdetector(maskModel.ClickDetector)
             end)
-        until plr.Backpack:FindFirstChild("[Mask]") or plr.Character:FindFirstChild("[Mask]")
-        task.wait(0.5)
-        plr.Character:WaitForChild("HumanoidRootPart").CFrame = savedCFrame
-    end
-
-    function mask(bool)
-        if (not plr.Character:FindFirstChild("[Mask]")) and (not plr.Backpack:FindFirstChild("[Mask]")) then
-            getMask()
-        end
-        bool = tostring(bool)
-        local condition
-        if bool == "true" then
-            condition = Enum.HumanoidDisplayDistanceType.None
         else
-            condition = Enum.HumanoidDisplayDistanceType.Viewer
-        end
-        if plr.Character:WaitForChild("Humanoid").DisplayDistanceType == condition then
-            return
-        end
-        if not plr.Character:FindFirstChild("[Mask]") then
-            pcall(function()
-                plr.Character:WaitForChild("Humanoid"):EquipTool(plr.Backpack:FindFirstChild("[Mask]"))
-            end)
-        end
-        repeat
-            pcall(function()
-                plr.Character:FindFirstChild("[Mask]"):Activate()
-            end)
-            task.wait()
-        until plr.Character:WaitForChild("Humanoid").DisplayDistanceType == condition
-    end
+            localPlayer.Character.PrimaryPart.CFrame = CFrame.new(math.random(-500, 500), 1500, math.random(-500, 500))
+            localPlayer.Character.PrimaryPart.Velocity = Vector3.new(0, 0, 0)
 
-    mask(true)
-loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
+            registerIgnore = {}
+        end
     end
+end)
+
+localPlayer.CharacterAdded:Connect(AntiSit)
+task.spawn(function()
+	task.wait(3)
+	AntiSit(localPlayer.Character)
+end)
+
+if localPlayer.Character then
+    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -100, 0)
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
+    game:GetService("RunService"):Set3dRenderingEnabled(false)
+end
