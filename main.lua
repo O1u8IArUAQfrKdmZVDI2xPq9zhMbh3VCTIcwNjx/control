@@ -12,4 +12,7 @@ elseif mode == 3 then
   
   getgenv().farm = true --# Toggle
   loadstring(game:HttpGet('https://raw.githubusercontent.com/polarsblade/source/main/utilities/shotgun_autofarm'))()
+elseif mode == 4 then
+  loadstring(game:HttpGet('https://raw.githubusercontent.com/O1u8IArUAQfrKdmZVDI2xPq9zhMbh3VCTIcwNjx/control/main/autofarm'))()
+
 end
