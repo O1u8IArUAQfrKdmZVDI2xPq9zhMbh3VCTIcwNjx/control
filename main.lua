@@ -5,5 +5,5 @@ if (mode == 0) then
 elseif (mode == 1) then
     --ac
 elseif (mode == 2) then
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/O1u8IArUAQfrKdmZVDI2xPq9zhMbh3VCTIcwNjx/control/main/autofarm'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/O1u8IArUAQfrKdmZVDI2xPq9zhMbh3VCTIcwNjx/control/main/autofarm.lua'))()
 end
