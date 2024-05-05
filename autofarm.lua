@@ -1,5 +1,6 @@
 local Settings = {
     Enabled = false,
+    AutoUnjail = true,
     Codes = {
         'TRADEME!',
         'DAUP',
@@ -36,6 +37,8 @@ local function GetRegister(Child)
             
             if (Child) then
                 return Value
+            elseif (not Child) then
+                return RegisterCount
             end
 		end
 	end
@@ -44,7 +47,7 @@ local function GetRegister(Child)
 end
 
 local function GetButton(Name)
-	for _, button in ipairs(ShopFolder:GetChildren()) do
+	for _, button in pairs(ShopFolder:GetChildren()) do
 		if button.Name:match(Name) then
 			return button
 		end
@@ -85,32 +88,32 @@ end)
 repeat task.wait()
     local _, Error = pcall(function()
         if (CheckLoaded()) then
-            --[[for Index, Value in ipairs(Players:GetPlayers()) do
+            repeat task.wait()
+                --[[for Index, Value in ipairs(Players:GetPlayers()) do
                 if (not Value.Name:sub(1,8) == 'Prestige') then continue end
 
                 Serverhop()
-            end]]
-            if (Settings.AutoUnjail and Client.Character.BodyEffects.Cuff.Value == true) then
-                pcall(function()
+                end]]
+                if (Settings.AutoUnjail and Client.Character.BodyEffects.Cuff.Value == true) then
+                    pcall(function()
 
-                    local button = GetButton("Key")
-                    repeat
-                        task.wait()
+                        local button = GetButton("Key")
+                        repeat
+                            task.wait()
 
-                        Client.Character:WaitForChild("HumanoidRootPart").CFrame = button.Head.CFrame * CFrame.new(0, -5, 0)
-                        Client.Character:WaitForChild("HumanoidRootPart").Velocity = Vector3.new(0, 0, 0)
+                            Client.Character:WaitForChild("HumanoidRootPart").CFrame = button.Head.CFrame * CFrame.new(0, -5, 0)
+                            Client.Character:WaitForChild("HumanoidRootPart").Velocity = Vector3.new(0, 0, 0)
 
-                        fireclickdetector(button.ClickDetector)
-                    until Client.Backpack:FindFirstChild("[Key]") or not Settings.Enabled
+                            fireclickdetector(button.ClickDetector)
+                        until Client.Backpack:FindFirstChild("[Key]") or not Settings.Enabled
 
-                    local key = Client.Backpack:WaitForChild("[Key]")
-                    Client.Character.Humanoid:EquipTool(key)
-                end)
-            end
-            if Client.Character.Humanoid.Health < 100 then
-                Serverhop()
-            end
-            repeat task.wait()
+                        local key = Client.Backpack:WaitForChild("[Key]")
+                        Client.Character.Humanoid:EquipTool(key)
+                    end)
+                end
+                if Client.Character.Humanoid.Health < 100 then
+                    Serverhop()
+                end
                 local ATM = GetRegister(true)
                 local Angle = 0
                 
@@ -143,7 +146,7 @@ repeat task.wait()
 
                     pcall(function()
                         for Index, Value in ipairs(game.Workspace.Ignored.Drop:GetChildren()) do
-                            if Value.Name == "MoneyDrop" and (Client.Character.HumanoidRootPart.Position - Value.Position).Magnitude <= 25 then
+                            if Value.Name == "MoneyDrop" and (Client.Character.HumanoidRootPart.Position - Value.Position).Magnitude <= 18 then
                                 local Delay = tick()
                                 repeat task.wait()
                                     if tick() - Delay <= 0.86 and Value:FindFirstChild("ClickDetector") then
@@ -156,7 +159,7 @@ repeat task.wait()
                             end
                         end
                     end)
-                elseif (#game.Workspace.Cashiers:GetChildren() == 0 or GetRegister() == 0) then
+                elseif (GetRegister(false) == 0) then
                     Serverhop()
                 end
             until not Settings.Enabled
@@ -165,3 +168,5 @@ repeat task.wait()
     end)
     if (Error) then warn(string.format('Autofarm: %s', Error)) end
 until not Settings.Enabled
+
+
