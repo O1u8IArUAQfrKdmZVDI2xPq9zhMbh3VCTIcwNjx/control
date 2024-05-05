@@ -110,56 +110,58 @@ repeat task.wait()
             if Client.Character.Humanoid.Health < 100 then
                 Serverhop()
             end
-            local ATM = GetRegister(true)
-            local Angle = 0
-            
-            if (ATM) then
-                repeat task.wait()
-                    Angle += 1
+            repeat task.wait()
+                local ATM = GetRegister(true)
+                local Angle = 0
+                
+                if (ATM) then
+                    repeat task.wait()
+                        Angle += 1
 
-                    if (Client.Character.BodyEffects.Attacking.Value == true) then
-                        Client.Character.HumanoidRootPart.CFrame = ATM.Open.CFrame * CFrame.Angles(0, math.rad(Angle), 0)
-                        Client.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-                    else
-                        repeat task.wait()
-                            if (Client.Backpack.BodyEffects.Dead.Value) then
-                                if (Client.Character:FindFirstChildOfClass("Tool")) then
-                                    Client.Character.Humanoid:UnequipTools()
-                                end
-                            else
-                                if (Client.Backpack:FindFirstChild("Combat")) then
-                                    Client.Character.Humanoid:EquipTool(Client.Backpack:FindFirstChild("Combat"))
-                                else
-                                    Client.Character:FindFirstChild("Combat"):Activate()
-                                end
-                            end
-
-                            Client.Character.HumanoidRootPart.CFrame = ATM.Open.CFrame * CFrame.new(0, -10, 0)
+                        if (Client.Character.BodyEffects.Attacking.Value == true) then
+                            Client.Character.HumanoidRootPart.CFrame = ATM.Open.CFrame * CFrame.Angles(0, math.rad(Angle), 0)
                             Client.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-                        until Client.Character:FindFirstChildOfClass("Highlight") or Client.Character.BodyEffects.Dead.Value or not Settings.Enabled
-                    end
-                until ATM.Humanoid.Health <= 0 or Client.Character.BodyEffects.Dead.Value or not Settings.Enabled
-
-                pcall(function()
-                    for Index, Value in ipairs(game.Workspace.Ignored.Drop:GetChildren()) do
-                        if Value.Name == "MoneyDrop" and (Client.Character.HumanoidRootPart.Position - Value.Position).Magnitude <= 25 then
-                            local Delay = tick()
+                        else
                             repeat task.wait()
-                                if tick() - Delay <= 0.86 and Value:FindFirstChild("ClickDetector") then
-                                    fireclickdetector(Value.ClickDetector)
+                                if (Client.Character.BodyEffects.Dead.Value) then
+                                    if (Client.Character:FindFirstChildOfClass("Tool")) then
+                                        Client.Character.Humanoid:UnequipTools()
+                                    end
+                                else
+                                    if (Client.Backpack:FindFirstChild("Combat")) then
+                                        Client.Character.Humanoid:EquipTool(Client.Backpack:FindFirstChild("Combat"))
+                                    else
+                                        Client.Character:FindFirstChild("Combat"):Activate()
+                                    end
                                 end
 
-                                Client.Character.HumanoidRootPart.CFrame = CFrame.new(Value.Position - Vector3.new(0, 8, 0))
+                                Client.Character.HumanoidRootPart.CFrame = ATM.Open.CFrame * CFrame.new(0, -10, 0)
                                 Client.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-                            until Value.Parent == nil or not Settings.Enabled
+                            until Client.Character:FindFirstChildOfClass("Highlight") or Client.Character.BodyEffects.Dead.Value or not Settings.Enabled
                         end
-                    end
-                end)
-            elseif (not ATM) then
-                Serverhop()
-            end
-            
+                    until ATM.Humanoid.Health <= 0 or Client.Character.BodyEffects.Dead.Value or not Settings.Enabled
+
+                    pcall(function()
+                        for Index, Value in ipairs(game.Workspace.Ignored.Drop:GetChildren()) do
+                            if Value.Name == "MoneyDrop" and (Client.Character.HumanoidRootPart.Position - Value.Position).Magnitude <= 25 then
+                                local Delay = tick()
+                                repeat task.wait()
+                                    if tick() - Delay <= 0.86 and Value:FindFirstChild("ClickDetector") then
+                                        fireclickdetector(Value.ClickDetector)
+                                    end
+
+                                    Client.Character.HumanoidRootPart.CFrame = CFrame.new(Value.Position - Vector3.new(0, 8, 0))
+                                    Client.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                                until Value.Parent == nil or not Settings.Enabled
+                            end
+                        end
+                    end)
+                elseif (#game.Workspace.Cashiers:GetChildren() == 0 or GetRegister() == 0) then
+                    Serverhop()
+                end
+            until not Settings.Enabled
         end
+
     end)
     if (Error) then warn(string.format('Autofarm: %s', Error)) end
 until not Settings.Enabled
