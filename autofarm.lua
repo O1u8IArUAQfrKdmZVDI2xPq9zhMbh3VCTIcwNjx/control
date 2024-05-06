@@ -1,6 +1,11 @@
 local Settings = {
     Enabled = false,
     AutoUnjail = true,
+    Serverhop = {
+        OnHealthChanged = false,
+        Cycle = false,
+        Name = false,
+    },
     Codes = {
         'TRADEME!',
         'DAUP',
@@ -20,6 +25,8 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage');
 -- \\ Variables
 local Client = Players.LocalPlayer;
 local ShopFolder = game.Workspace.Ignored.Shop;
+
+
 
 local function CheckLoaded()
     if (Client and Client.Character and Client.Character:FindFirstChild("FULLY_LOADED_CHAR") and Client.Backpack and Client.Backpack:FindFirstChild("Combat")) then
@@ -84,16 +91,25 @@ task.spawn(function()
         task.wait(3)
     end
 end)
+for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
+    Value:Destroy()
+end
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
+game:GetService("RunService"):Set3dRenderingEnabled(true)
 
 repeat task.wait()
     local _, Error = pcall(function()
         if (CheckLoaded()) then
             repeat task.wait()
-                --[[for Index, Value in ipairs(Players:GetPlayers()) do
-                if (not Value.Name:sub(1,8) == 'Prestige') then continue end
+                if Settings.Serverhop.Name then
+                    for Index, Value in ipairs(Players:GetPlayers()) do
+                    if (not Value.Name:sub(1,8) == 'Prestige') then continue end
 
-                Serverhop()
-                end]]
+                    Serverhop()
+                    end
+                end
                 if (Settings.AutoUnjail and Client.Character.BodyEffects.Cuff.Value == true) then
                     pcall(function()
 
@@ -111,8 +127,10 @@ repeat task.wait()
                         Client.Character.Humanoid:EquipTool(key)
                     end)
                 end
-                if Client.Character.Humanoid.Health < 100 then
-                    Serverhop()
+                if Settings.Serverhop.OnHealthChanged then
+                    if Client.Character.Humanoid.Health < 100 then
+                        Serverhop()
+                    end
                 end
                 local ATM = GetRegister(true)
                 local Angle = 0
@@ -159,8 +177,14 @@ repeat task.wait()
                             end
                         end
                     end)
-                elseif (GetRegister(false) == 0) then
-                    Serverhop()
+                else
+                    if Settings.Serverhop.Cycle then 
+                        if (GetRegister(false) == 0) then
+                            Serverhop()
+                        end
+                    else
+                        Client.Character.HumanoidRootPart.CFrame = CFrame.new(math.random(-500, 500), 1500, math.random(-500, 500))
+                    end
                 end
             until not Settings.Enabled
         end
