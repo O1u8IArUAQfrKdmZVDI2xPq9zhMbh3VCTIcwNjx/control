@@ -1,6 +1,9 @@
+--// 5/5/2024 Is shit some shit pasted but yea it works and its kgood so kill yuorself
+
 local Settings = {
     Enabled = false,
     AutoUnjail = true,
+    RejoinOnDisconnect = true,
     Serverhop = {
         OnHealthChanged = false,
         Cycle = false,
@@ -25,8 +28,6 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage');
 -- \\ Variables
 local Client = Players.LocalPlayer;
 local ShopFolder = game.Workspace.Ignored.Shop;
-
-
 
 local function CheckLoaded()
     if (Client and Client.Character and Client.Character:FindFirstChild("FULLY_LOADED_CHAR") and Client.Backpack and Client.Backpack:FindFirstChild("Combat")) then
@@ -83,6 +84,14 @@ local function Serverhop()
     until Server
     
     TPS:TeleportToPlaceInstance(_place,Server.id, Client)
+end
+
+if Settings.RejoinOnDisconnect then
+    getgenv().Rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+            Serverhop()
+        end
+    end)
 end
 
 task.spawn(function()
@@ -185,7 +194,7 @@ repeat task.wait()
                             if Value.Name == "MoneyDrop" and (Client.Character.HumanoidRootPart.Position - Value.Position).Magnitude <= 18 then
                                 local Delay = tick()
                                 repeat task.wait()
-                                    if tick() - Delay <= 0.86 and Value:FindFirstChild("ClickDetector") then
+                                    if tick() - Delay <= 0.9 and Value:FindFirstChild("ClickDetector") then
                                         fireclickdetector(Value.ClickDetector)
                                     end
 
