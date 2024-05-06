@@ -2,8 +2,8 @@ local mode = loadstring(game:HttpGet('https://raw.githubusercontent.com/O1u8IArU
 
 if (mode == 0) then
     return
-elseif (mode == 1) then
+elseif (mode == 1 or mode == 'altcontrol') then
     --ac
-elseif (mode == 2) then
+elseif (mode == 2 or mode == 'autofarm') then
     loadstring(game:HttpGet('https://raw.githubusercontent.com/O1u8IArUAQfrKdmZVDI2xPq9zhMbh3VCTIcwNjx/control/main/autofarm.lua'))()
 end
