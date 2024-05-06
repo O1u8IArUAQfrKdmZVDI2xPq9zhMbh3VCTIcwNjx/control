@@ -91,13 +91,31 @@ task.spawn(function()
         task.wait(3)
     end
 end)
+for _, v in ipairs(game.Workspace.Cashiers:GetChildren()) do
+	local open_part = v.Open
+
+	local floor = Instance.new("Part")
+	floor.Size = Vector3.new(100, 1, 100)
+	floor.Position = open_part.Position - Vector3.new(0, 4.7, 0)
+	floor.Anchored = true
+	floor.Parent = workspace
+end
+
+pcall(function()
+	workspace.MAP:Destroy()
+	workspace.Lights:Destroy()
+
+	for _, v in ipairs(game.Lighting:GetChildren()) do
+		v:Destroy()
+	end
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
+game:GetService("RunService"):Set3dRenderingEnabled(true)
+end)
 for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
     Value:Destroy()
 end
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
-game:GetService("RunService"):Set3dRenderingEnabled(true)
 
 repeat task.wait()
     local _, Error = pcall(function()
