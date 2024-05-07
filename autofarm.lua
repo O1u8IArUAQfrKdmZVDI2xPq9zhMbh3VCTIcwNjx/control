@@ -118,18 +118,17 @@ end)
 --[[for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
     Value:Destroy()
 end]]
-
+if Settings.RejoinOnDisconnect then
+    game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild('ErrorFrame') then
+            Serverhop()
+        end
+    end)
+end
 repeat task.wait()
     local _, Error = pcall(function()
         if (CheckLoaded()) then
             repeat task.wait()
-                if Settings.RejoinOnDisconnect then
-                    getgenv().Rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-                        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
-                            Serverhop()
-                        end
-                    end)
-                end
                 if Settings.Serverhop.Name then
                     for Index, Value in ipairs(Players:GetPlayers()) do
                     if (not Value.Name:sub(1,8) == 'Prestige') then continue end
