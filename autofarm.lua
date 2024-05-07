@@ -1,5 +1,4 @@
---// 5/5/2024 Is shit some shit pasted but yea it works and its kgood so kill yuorself
-
+--\\ Table
 local Settings = {
     Enabled = false,
     AutoUnjail = true,
@@ -27,10 +26,12 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage');
 
 -- \\ Variables
 local Client = Players.LocalPlayer;
+local Backpack = Client.Backpack;
 local ShopFolder = game.Workspace.Ignored.Shop;
-
+local RegisterCount;
+-- \\ Functions
 local function CheckLoaded()
-    if (Client and Client.Character and Client.Character:FindFirstChild("FULLY_LOADED_CHAR") and Client.Backpack and Client.Backpack:FindFirstChild("Combat")) then
+    if (Client and Client.Character and Client.Character:FindFirstChild("FULLY_LOADED_CHAR") and Backpack and Backpack:FindFirstChild("Combat")) then
 		return true
 	end
 
@@ -86,14 +87,6 @@ local function Serverhop()
     TPS:TeleportToPlaceInstance(_place,Server.id, Client)
 end
 
-if Settings.RejoinOnDisconnect then
-    getgenv().Rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
-            Serverhop()
-        end
-    end)
-end
-
 task.spawn(function()
     for Index, Value in pairs(Settings.Codes) do
         ReplicatedStorage.MainEvent:FireServer("EnterPromoCode", Value)
@@ -120,16 +113,23 @@ pcall(function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
-game:GetService("RunService"):Set3dRenderingEnabled(true)
+    game:GetService("RunService"):Set3dRenderingEnabled(true)
 end)
-for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
+--[[for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
     Value:Destroy()
-end
+end]]
 
 repeat task.wait()
     local _, Error = pcall(function()
         if (CheckLoaded()) then
             repeat task.wait()
+                if Settings.RejoinOnDisconnect then
+                    getgenv().Rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+                        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+                            Serverhop()
+                        end
+                    end)
+                end
                 if Settings.Serverhop.Name then
                     for Index, Value in ipairs(Players:GetPlayers()) do
                     if (not Value.Name:sub(1,8) == 'Prestige') then continue end
@@ -162,7 +162,7 @@ repeat task.wait()
                 local ATM = GetRegister(true)
                 local Angle = 0
                 
-                if (ATM) then
+                if (ATM and ATM ~= 0) then
                     repeat task.wait()
                         Angle += 1
 
@@ -204,8 +204,8 @@ repeat task.wait()
                             end
                         end
                     end)
-                else
-                    if Settings.Serverhop.Cycle then 
+                elseif (ATM == 0) then
+                    if (Settings.Serverhop.Cycle) then 
                         if (GetRegister(false) == 0) then
                             Serverhop()
                         end
