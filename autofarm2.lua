@@ -389,9 +389,13 @@ end)
 if localplayer.Character then
     localplayer.Character.Humanoid.Health = 0
 end
-for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
-    Value:Destroy()
-end
+task.spawn(function()
+    for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
+        if Value.Name == '/QuickCash' then continue end
+        
+        Value:Destroy()
+    end
+end)
 -- Farm
 localplayer.CharacterAdded:Connect(function(character)
     -- Wait For Load
@@ -632,3 +636,10 @@ localplayer.CharacterAdded:Connect(function(character)
     until _G.configuration.status == false
 end)
 
+task.spawn(function()
+    for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
+        if Value.Name == '/QuickCash' then continue end
+
+        Value:Destroy()
+    end
+end)
