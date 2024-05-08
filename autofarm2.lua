@@ -28,6 +28,19 @@ _G.configuration = {
         },
         playerexistshop = true, -- automatically serverhops when player with matching id in 'existsids' already is in the server
         existsids = {
+            4839199587,
+            4839208183,
+            4839211426,
+            4841225793,
+            4841230996,
+            4852051938,
+            4852053779,
+            4852055386,
+            4852057398,
+            4852059395,
+            --prestigedhc1-10 above
+            3628439595,
+            --progarillamadmnar
             5618935183,
             5619846786,
             5617789196,
@@ -159,7 +172,7 @@ local function serverhop()
 end
 
 local function optimize()
-    
+    pcall(function()
     local ignoreinstances = {'Camera', 'Terrain', 'Cashiers', 'Ignored', 'Players'}
     for _, child in ipairs(workspace:GetChildren()) do
         if not table.find(ignoreinstances, child.Name) then
@@ -192,6 +205,7 @@ local function optimize()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
+end)
 end
 
 -- Reset Fix
