@@ -3,7 +3,7 @@ _G.configuration = {
     status = true,
     optimize = true, -- decreases gpu/mem usage
     disablerendering = true, -- decreases gpu usage
-    screengui = false, -- screen gui that covers entire screen with information such as the amount of cash along with a combat indicator
+    screengui = true, -- screen gui that covers entire screen with information such as the amount of cash along with a combat indicator
     behavior = {
         pickupdelay = 0.86, -- pickupdelay to prevent kick
         furtherpickupdelay = 0.14, -- pickupdelay + furtherpickupdelay for further cash to prevent kick
@@ -17,10 +17,10 @@ _G.configuration = {
         unjail = true, -- automatically purchases and uses key to unjail
     },
     serverhop = {
-        leaveonknock = false, -- automatically serverhops when knocked
+        leaveonknock = true, -- automatically serverhops when knocked
         timer = {
-            usetimer = false, -- automatically serverhops after 'seconds' passes
-            seconds = 60
+            usetimer = true, -- automatically serverhops after 'seconds' passes
+            seconds = 180
         },
         playerjoinedhop = false, -- automatically serverhops when player with matching id in 'joinedids' joins
         joinedids = {
@@ -132,7 +132,7 @@ UserSettings().GameSettings.MasterVolume = 0
 -- Anti Afk
 localplayer.Idled:Connect(function()
     virtualuser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-    wait(1)
+    task.wait(1)
     virtualuser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
@@ -159,6 +159,7 @@ local function serverhop()
 end
 
 local function optimize()
+    
     local ignoreinstances = {'Camera', 'Terrain', 'Cashiers', 'Ignored', 'Players'}
     for _, child in ipairs(workspace:GetChildren()) do
         if not table.find(ignoreinstances, child.Name) then
@@ -188,6 +189,9 @@ local function optimize()
             child:Destroy()
         end
     end
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/A.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Astonlix/LuaU/Da-Hood/B.lua'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/dooms-scripts/dahood/main/ultra-optimize.lua'))()
 end
 
 -- Reset Fix
@@ -368,10 +372,12 @@ pcall(function()
 end)
 
 -- Reset Fix
---[[if localplayer.Character then
+if localplayer.Character then
     localplayer.Character.Humanoid.Health = 0
-end]]
-
+end
+for Index, Value in pairs(game:GetService('CoreGui'):GetChildren()) do
+    Value:Destroy()
+end
 -- Farm
 localplayer.CharacterAdded:Connect(function(character)
     -- Wait For Load
@@ -611,3 +617,4 @@ localplayer.CharacterAdded:Connect(function(character)
         end)
     until _G.configuration.status == false
 end)
+
