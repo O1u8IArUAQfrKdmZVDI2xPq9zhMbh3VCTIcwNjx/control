@@ -4,7 +4,7 @@ ATM FARM (v1.0) (UNDERGOING FIXES)
 
 --]]
 
-script_key="PkBzjxdqfjtqDpHUoyBQGNDyReieScG";
+script_key="PkBzjxdqfjtqDpHUoyBQGNDyReieScGt";
 
 -- Table
 _G.configuration = {
