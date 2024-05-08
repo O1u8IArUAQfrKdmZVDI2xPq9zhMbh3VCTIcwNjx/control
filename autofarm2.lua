@@ -115,17 +115,6 @@ _G.configuration = {
 -- Script
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:WaitForChild('FULLY_LOADED_CHAR')
-local function getServerType()
-	if game.PrivateServerId ~= "" then
-		if game.PrivateServerOwnerId ~= 0 then
-			return "VIPServer"
-		else
-			return "ReservedServer"
-		end
-	else
-		return "StandardServer"
-	end
-end
 
 -- Services
 local players = game:GetService('Players')
@@ -181,8 +170,6 @@ local function serverhop()
 
     teleportservice:TeleportToPlaceInstance(placeid, openservers[math.random(1, #openservers)].id)
 end
-
-if getServerType == 'VIPServer' or 'ReservedServer' then serverhop() end
 
 local function optimize()
     pcall(function()
