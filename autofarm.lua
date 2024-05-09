@@ -18,7 +18,7 @@ _G.configuration = {
         hospitalfarm = true, -- automatically completes hospital when idle
         shoefarm = true, -- automatically collects shoes when idle
         autobox = true, -- automatically boxes before farming
-        fpscapacity = 3, -- decreases cpu usage (lower = less usage / higher = more usage)
+        fpscapacity = 5, -- decreases cpu usage (lower = less usage / higher = more usage)
     },
     purchases = {
         mask = true, -- automatically purchases and equips masks
@@ -28,13 +28,13 @@ _G.configuration = {
         leaveonknock = false, -- automatically serverhops when knocked
         timer = {
             usetimer = true, -- automatically serverhops after 'seconds' passes
-            seconds = 180
+            seconds = 300
         },
         playerjoinedhop = false, -- automatically serverhops when player with matching id in 'joinedids' joins
         joinedids = {
 
         },
-        playerexistshop = false, -- automatically serverhops when player with matching id in 'existsids' already is in the server
+        playerexistshop = true, -- automatically serverhops when player with matching id in 'existsids' already is in the server
         existsids = {
             4839199587,
             4839208183,
