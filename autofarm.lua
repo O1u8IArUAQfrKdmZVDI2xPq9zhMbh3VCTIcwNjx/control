@@ -25,7 +25,7 @@ _G.configuration = {
         unjail = true, -- automatically purchases and uses key to unjail
     },
     serverhop = {
-        leaveonknock = false, -- automatically serverhops when knocked
+        leaveonknock = true, -- automatically serverhops when knocked
         timer = {
             usetimer = true, -- automatically serverhops after 'seconds' passes
             seconds = 300
@@ -36,6 +36,32 @@ _G.configuration = {
         },
         playerexistshop = true, -- automatically serverhops when player with matching id in 'existsids' already is in the server
         existsids = {
+            5706602113,
+            5706603909,
+            5706604496,
+            5706605412,
+            5706606179,
+            5706606908,
+            5706607635,
+            5706608267,
+            5706608925,
+            5706609759,
+            5706637172,
+            5706637724,
+            5706638428,
+            5706640295,
+            5706640395,
+            5706641420,
+            5706643572,
+            5706644333,
+            5706645135,
+            5706645941,
+            3628437846,
+            3628448372,
+            3628451840,
+            3628701286,
+            3010069949,
+            3628710317,
             4839199587,
             4839208183,
             4839211426,
