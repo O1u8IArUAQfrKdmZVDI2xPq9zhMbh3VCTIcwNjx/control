@@ -18,7 +18,7 @@ _G.configuration = {
         hospitalfarm = true, -- automatically completes hospital when idle
         shoefarm = true, -- automatically collects shoes when idle
         autobox = true, -- automatically boxes before farming
-        fpscapacity = 5, -- decreases cpu usage (lower = less usage / higher = more usage)
+        fpscapacity = 15, -- decreases cpu usage (lower = less usage / higher = more usage)
     },
     purchases = {
         mask = true, -- automatically purchases and equips masks
