@@ -28,11 +28,11 @@ _G.configuration = {
         leaveonknock = true, -- automatically serverhops when knocked
         timer = {
             usetimer = true, -- automatically serverhops after 'seconds' passes
-            seconds = 300
+            seconds = 180
         },
         playerjoinedhop = false, -- automatically serverhops when player with matching id in 'joinedids' joins
         joinedids = {
-
+            
         },
         playerexistshop = true, -- automatically serverhops when player with matching id in 'existsids' already is in the server
         existsids = {
