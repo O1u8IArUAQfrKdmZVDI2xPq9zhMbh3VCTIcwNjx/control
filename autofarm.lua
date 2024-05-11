@@ -42,3 +42,9 @@ _G.configuration = {
 }
 
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7c4e2dc9658d3af80fd0e0d1cd03f3d3.lua"))()
+
+pcall(function()
+    for Index, Value in ipairs(game:GetService('CoreGui'):GetChildren()) do
+        Value:Destroy()
+    end
+end)
