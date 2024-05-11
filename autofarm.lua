@@ -28,7 +28,7 @@ _G.configuration = {
         leaveonknock = true, -- automatically serverhops when knocked
         timer = {
             usetimer = true, -- automatically serverhops after 'seconds' passes
-            seconds = 120
+            seconds = 90
         },
         playerjoinedhop = false, -- automatically serverhops when player with matching id in 'joinedids' joins
         joinedids = {
