@@ -144,8 +144,8 @@ _G.configuration = {
 
 local function RedeemCode()
     local RedeemCodes = task.spawn(function()
-        for Index, Value in pairs(Settings['Codes']) do
-            ReplicatedStorage.MainEvent:FireServer("EnterPromoCode", Value)
+        for Index, Value in pairs(_G.configuration.codes) do
+            game:GetService('ReplicatedStorage').MainEvent:FireServer("EnterPromoCode", Value)
             task.wait(2)
         end
     end)
