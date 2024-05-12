@@ -4,20 +4,20 @@ ATM FARM (v1.0) (UNDERGOING FIXES)
 
 --]]
 
-script_key="PkBzjxdqfjtqDpHUoyBQGNDyReieScGt";
+script_key="LqWEpoHiknUHeTZouBdGfQxVRFoeAYKD";
 
 -- Table
 _G.configuration = {
     status = true,
     optimize = true, -- decreases gpu/mem usage
     disablerendering = false, -- decreases gpu usage
-    screengui = true, -- screen gui that covers entire screen with information such as the amount of cash along with a combat indicator
+    screengui = false, -- screen gui that covers entire screen with information such as the amount of cash along with a combat indicator
     behavior = {
         pickupdelay = 0.7, -- pickupdelay to prevent kick
         furtherpickupdelay = 0.25, -- pickupdelay + furtherpickupdelay for further cash to prevent kick
         hospitalfarm = true, -- automatically completes hospital when idle
         shoefarm = true, -- automatically collects shoes when idle
-        autobox = true, -- automatically boxes before farming
+        autobox = false, -- automatically boxes before farming
         fpscapacity = 8, -- decreases cpu usage (lower = less usage / higher = more usage)
     },
     purchases = {
