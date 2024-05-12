@@ -12,7 +12,7 @@ deletecash -- Usage "deletecash" || permanetly hides / deletes cash
 
 --]]
 
-script_key="PkBzjxdqfjtqDpHUoyBQGNDyReieScG";
+script_key="LqWEpoHiknUHeTZouBdGfQxVRFoeAYKD";
 
 _G.configuration = {
     host = 'Astonlix', -- username or displayname or userid
