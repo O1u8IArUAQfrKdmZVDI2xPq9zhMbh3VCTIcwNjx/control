@@ -133,6 +133,8 @@ _G.configuration = {
         },
     },
 }
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:WaitForChild('FULLY_LOADED_CHAR')
 codes = {
         'TRADEME!',
         'DAUP',
