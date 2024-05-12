@@ -131,7 +131,7 @@ _G.configuration = {
                 502075313,
                 5327703158,
         },
-    }
+    },
     codes = {
         'TRADEME!',
         'DAUP',
