@@ -132,7 +132,8 @@ _G.configuration = {
                 5327703158,
         },
     },
-    codes = {
+}
+codes = {
         'TRADEME!',
         'DAUP',
         'MELONBEAR',
@@ -140,18 +141,10 @@ _G.configuration = {
         'pumpkins2023',
         'RUBY',
     }
-}
-
-local function RedeemCode()
-    local RedeemCodes = task.spawn(function()
-        for Index, Value in pairs(_G.configuration.codes) do
-            game:GetService('ReplicatedStorage').MainEvent:FireServer("EnterPromoCode", Value)
-            task.wait(2)
-        end
-    end)
-    task.cancel(RedeemCodes)
-end
-
-RedeemCode()
-
+task.spawn(function()
+    for Index, Value in codes do
+        game:GetService('ReplicatedStorage').MainEvent:FireServer("EnterPromoCode", Value)
+        task.wait(2)
+    end
+end)
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7c4e2dc9658d3af80fd0e0d1cd03f3d3.lua"))()
