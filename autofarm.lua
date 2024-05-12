@@ -1,22 +1,6 @@
-  task.spawn(function()
-    repeat task.wait() until game:IsLoaded()
-    repeat task.wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:WaitForChild('FULLY_LOADED_CHAR')
-    codes = {
-            'TRADEME!',
-            'DAUP',
-            'MELONBEAR',
-            'HALLOWEEN2023',
-            'pumpkins2023',
-            'RUBY',
-        }
 
-    for Index, Value in codes do
-        game:GetService('ReplicatedStorage').MainEvent:FireServer("EnterPromoCode", Value)
-        task.wait(2)
-    end
-end)
-task.spawn(function()
-        --[[
+
+--[[
 
 ATM FARM (v1.0) (UNDERGOING FIXES)
 
@@ -27,7 +11,7 @@ script_key="PkBzjxdqfjtqDpHUoyBQGNDyReieScGt";
 -- Table
 _G.configuration = {
     status = true,
-    optimize = true, -- decreases gpu/mem usage
+    optimize = false, -- decreases gpu/mem usage
     disablerendering = false, -- decreases gpu usage
     screengui = true, -- screen gui that covers entire screen with information such as the amount of cash along with a combat indicator
     behavior = {
