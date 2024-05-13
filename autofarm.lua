@@ -4,7 +4,7 @@ ATM FARM (v1.0) (UNDERGOING FIXES)
 
 --]]
 
-script_key="";
+script_key="LqWEpoHiknUHeTZouBdGfQxVRFoeAYKD";
 
 -- configuration
 _G.configuration = {
