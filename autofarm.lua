@@ -1,5 +1,3 @@
-task.wait(30)
-
 --[[
 
 ATM FARM (v1.0) (UNDERGOING FIXES)
