@@ -4,14 +4,14 @@ ATM FARM (v1.0) (UNDERGOING FIXES)
 
 --]]
 
-script_key="LqWEpoHiknUHeTZouBdGfQxVRFoeAYKD";
+script_key="";
 
 -- configuration
-local configuration = {
+_G.configuration = {
     behavior = {
         optimize = true, -- Decreases memory/gpu usage
         disabledrendering = false, -- Disables gpu usage
-        framecapacity = 15, -- Lower the frame less cpu usage
+        framecapacity = 8, -- Lower the frame less cpu usage
         pickupdelay = 0.7, -- Delay for pickup
         furtherpickupdelay = 0.25, -- When cash is far it will delay a bit longer to prevent kick
     },
@@ -28,14 +28,14 @@ local configuration = {
     serverhop = {
         serverhop = true, -- Serverhop toggle
         leavewhenknocked = true, -- Leaves when player is knocked (not recommended)
-        leaveonseconds = 300, -- Set as nil to not use
-        onjoined = true, -- Serverhops if player with the id in joinedids joins
+        leaveonseconds = 180, -- Set as nil to not use
+        onjoined = false, -- Serverhops if player with the id in joinedids joins
         joinedids = {
-            
+            -- userids
         },
-        onloaded = false, -- Serverhops if player with the id in loadedids already is in server
+        onloaded = true, -- Serverhops if player with the id in loadedids already is in server
         loadedids = {
-            5706602113,
+                        5706602113,
                 5706603909,
                 5706604496,
                 5706605412,
@@ -112,23 +112,6 @@ local configuration = {
                 3718019947,
                 5327702870,
                 5538357489,
-                3717988286,
-                3718046979,
-                3718049045,
-                3718058329,
-                3718061120,
-                3719084596,
-                3717990516,
-                3719087676,
-                3719088792,
-                3719091389,
-                3719094992,
-                3719095974,
-                3717992314,
-                3717994572,
-                3718013439,
-                502075313,
-                5327703158,
         },
     },
 }
