@@ -33,7 +33,7 @@ local TeleportService = game:GetService('TeleportService');
 local ReplicatedStorage = game:GetService('ReplicatedStorage');
 
 --\\ Variables
-local Client = Players.Player;
+local Client = Players.LocalPlayer;
 local Backpack = Client.Backpack;
 local DataFolder = Client:WaitForChild('DataFolder');
 local Information = DataFolder:WaitForChild('Information');
