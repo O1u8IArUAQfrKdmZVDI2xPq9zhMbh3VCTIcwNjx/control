@@ -11,7 +11,7 @@ _G.configuration = {
     behavior = {
         optimize = true, -- Decreases memory/gpu usage
         disabledrendering = false, -- Disables gpu usage
-        framecapacity = 8, -- Lower the frame less cpu usage
+        framecapacity = 15, -- Lower the frame less cpu usage
         pickupdelay = 0.7, -- Delay for pickup
         furtherpickupdelay = 0.25, -- When cash is far it will delay a bit longer to prevent kick
     },
