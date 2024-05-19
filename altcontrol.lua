@@ -23,11 +23,13 @@ _G.configuration = {
         ['club'] = 'https://raw.githubusercontent.com/polarsblade/setups/main/club',
     },
     altaccounts = {
+        
         "djgyya",
         "annyrapma",
         "mssjbshddgehdhe",
         "cowpro7000",
         "uhVurelix",
+        --[[
         "timur190101",
         "Alterlix1",
         "Alterlix2",
@@ -49,6 +51,7 @@ _G.configuration = {
         "Alterlix18",
         "Alterlix19",
         "Alterlix20",
+        --]]
         "PrestigeDHC1",
         "PrestigeDHC5",
         "PrestigeDHC7",
