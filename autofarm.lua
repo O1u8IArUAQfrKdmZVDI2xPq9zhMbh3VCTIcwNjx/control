@@ -11,7 +11,7 @@ _G.configuration = {
     behavior = {
         optimize = true, -- Decreases memory/gpu usage
         disabledrendering = false, -- Disables gpu usage
-        framecapacity = 15, -- Lower the frame less cpu usage
+        framecapacity = 8, -- Lower the frame less cpu usage
         pickupdelay = 0.7, -- Delay for pickup
         furtherpickupdelay = 0.25, -- When cash is far it will delay a bit longer to prevent kick
     },
@@ -28,14 +28,14 @@ _G.configuration = {
     serverhop = {
         serverhop = true, -- Serverhop toggle
         leavewhenknocked = true, -- Leaves when player is knocked (not recommended)
-        leaveonseconds = 180, -- Set as nil to not use
+        leaveonseconds = 300, -- Set as nil to not use
         onjoined = false, -- Serverhops if player with the id in joinedids joins
         joinedids = {
             -- userids
         },
         onloaded = true, -- Serverhops if player with the id in loadedids already is in server
         loadedids = {
-                        5706602113,
+                5706602113,
                 5706603909,
                 5706604496,
                 5706605412,
