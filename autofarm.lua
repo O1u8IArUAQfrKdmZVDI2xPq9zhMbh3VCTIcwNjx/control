@@ -115,5 +115,5 @@ _G.configuration = {
         },
     },
 }
-repeat task.wait() until game:IsLoaded()
+
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7c4e2dc9658d3af80fd0e0d1cd03f3d3.lua"))()
