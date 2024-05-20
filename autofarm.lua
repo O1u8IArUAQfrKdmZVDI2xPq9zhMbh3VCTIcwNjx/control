@@ -9,7 +9,7 @@ script_key="LqWEpoHiknUHeTZouBdGfQxVRFoeAYKD";
 -- configuration
 _G.configuration = {
     behavior = {
-        fps = 3,
+        fps = 5,
         rendering = false,
         optimize = true,
         gui = true,
